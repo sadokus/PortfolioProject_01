@@ -45,6 +45,7 @@ class enemy_class:
 			print("BATTLE INFO: " + self.name + " has taken damage!")
 		elif self.health - damage <= 0:
 			#self.health = 0
+			self.health -= damage
 			print(attacker.name + " defeated " + self.name + "!\nReward: " + str(self.gold_amount) + " gold!")
 			attacker.gold += self.gold_amount
 			time.sleep(1)
