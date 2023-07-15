@@ -1,4 +1,5 @@
 import random as rng
+import time 
 from Character import player_class as player
 from Character import enemy_class as enemy
 
@@ -54,25 +55,48 @@ def begin_battle(plr, enemy_count):
             if len(enemy_list) > 1:
                 countl = len(enemy_list)
                 for id in range(countl):
+                    time.sleep(0.0015)
                     realc = str(id+1)
                     enemy_text = "[" +realc+ "] " + str(enemy_list[id])
                     print(enemy_text)
             else:
                 print("One enemy stands before you!")
             #
-            minusentry = 0
+            minusentry = None
             while True:
                 try:
-                    fight_input = input("\nWhich one do you choose [1] - [n\'th]") 
+                    fight_input = input("\nWhich one do you choose [1] - [n\'th]\n>") 
                     minusentry = int(fight_input) - 1
-                    while (enemy_list[minusentry] not in enemy_list):
-                        print("ENTER A REAL ENEMY ENTRY")
+                    while ((minusentry > len(enemy_list) - 1)):
+                        print("[[[Enter an enemy number in the list!]]]")
+                        if len(enemy_list) > 1:
+                            countl = len(enemy_list)
+                            for id in range(countl):
+                                time.sleep(0.0015)
+                                realc = str(id+1)
+                                enemy_text = "[" + realc + "] " + str(enemy_list[id])
+                                print(enemy_text)
+                        else:
+                            print("One enemy stands before you!")
+                        
+                        fight_input = input("\nWhich one do you choose [1] - [n\'th]\n> ") 
+                        minusentry = int(fight_input) - 1
                     
                 except ValueError:
+                    print("[[[Please, input a number within the range given, no string entries!]]]\n")
+                    if len(enemy_list) > 1:
+                        countl = len(enemy_list)
+                        for id in range(countl):
+                            time.sleep(0.0015)
+                            realc = str(id+1)
+                            enemy_text = "[" + realc + "] " + str(enemy_list[id])
+                            print(enemy_text)
+                        else:
+                            print("One enemy stands before you!")
                     continue
 
                 else:
-                    print("execute here?")
+                    #print("execute here?")
                     break
             
             #print(str(enemy_list[minusentry]) + " index: " + str(minusentry))
@@ -84,14 +108,18 @@ def begin_battle(plr, enemy_count):
             """
             
             
-            #print(minusentry)
+
             enemy_list[minusentry].take_damage(plr.damage, plr)
             #player_turn, they get to choose which bandit to hurt
         elif dice_roll == 2:
+            print("enemy turn")
+            time.sleep(0.255)
             if plr.is_alive == False:
                 break
             rand_bandit = rng.choice(enemy_list)
             plr.take_damage(rand_bandit.damage, rand_bandit)
+            
+            #input("Press enter to advance\n")
             
             #enemy hurt
 

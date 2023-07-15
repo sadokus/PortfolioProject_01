@@ -20,7 +20,7 @@ class player_class:
 		if self.is_alive == False:
 			return
 		
-		print(self.name + " has taken damage " + str(damage))
+		print(self.name + " has taken damage " + str(damage) + " from [" + str(attacker.name) + "]")
 		if self.health - damage > 0:
 			self.health -= damage
 		elif self.health - damage <= 0:
