@@ -48,7 +48,12 @@ def begin_battle(plr, enemy_count):
     else:
         print("One enemy stands before you!")
     
-    while (not plr.health <= 0 or plr.is_alive == True):
+    while (not plr.health <= 0 or plr.is_alive == True ):
+        if len(enemy_list) == 0:
+            print("Battle over!")
+            print("Player's stats:")
+            print(plr)
+            break
         dice_roll = rng.randint(0, 2)
         if dice_roll == 1:
             #enemy_stringlist = str(enemy_list)
@@ -60,14 +65,17 @@ def begin_battle(plr, enemy_count):
                     enemy_text = "[" +realc+ "] " + str(enemy_list[id])
                     print(enemy_text)
             else:
-                print("One enemy stands before you!")
+                print("[1] Enemy: " + str(enemy_list[0]))
             #
             minusentry = None
             while True:
                 try:
+                    print(f"-----------------------------------------------------------------\nPlayer HP: {plr.start_health} / {plr.health}\n-----------------------------------------------------------------")
                     fight_input = input("\nWhich one do you choose [1] - [n\'th]\n>") 
+                    print("-------------------------------------------------------------")
                     minusentry = int(fight_input) - 1
                     while ((minusentry > len(enemy_list) - 1)):
+                        print(f"Player HP: {plr.start_health} / {plr.health}")
                         print("[[[Enter an enemy number in the list!]]]")
                         if len(enemy_list) > 1:
                             countl = len(enemy_list)
@@ -77,9 +85,11 @@ def begin_battle(plr, enemy_count):
                                 enemy_text = "[" + realc + "] " + str(enemy_list[id])
                                 print(enemy_text)
                         else:
-                            print("One enemy stands before you!")
+                            print(f"Player HP: {plr.start_health} / {plr.health}")
+                            print("[1] Enemy: " + str(enemy_list[0]))
                         
-                        fight_input = input("\nWhich one do you choose [1] - [n\'th]\n> ") 
+                        fight_input = input("\nWhich one do you choose [1] - [n\'th]\n> ")
+                        print("-------------------------------------------------------------") 
                         minusentry = int(fight_input) - 1
                     
                 except ValueError:
@@ -92,7 +102,8 @@ def begin_battle(plr, enemy_count):
                             enemy_text = "[" + realc + "] " + str(enemy_list[id])
                             print(enemy_text)
                         else:
-                            print("One enemy stands before you!")
+                            print(f"Player HP: {plr.start_health} / {plr.health}")
+                            print("[1] Enemy: " + str(enemy_list[0]))
                     continue
 
                 else:
@@ -100,25 +111,33 @@ def begin_battle(plr, enemy_count):
                     break
             
             #print(str(enemy_list[minusentry]) + " index: " + str(minusentry))
-            """
-            enemy_list[minusentry].take_damage(plr.damage, plr)
-            if enemy_list[minusentry].health <= 0:
+            rolled_dmg = rng.randint(plr.damage, plr.damage + 2)
+            if rolled_dmg != plr.damage:
+                print("Critical hit!")
+            enemy_list[minusentry].take_damage(rolled_dmg, plr)
+            
+            if enemy_list[minusentry].is_alive == False:
                 print(f'{enemy_list[minusentry].name} has died, removing from table!')
-                enemy_list.remove(minusentry)
-            """
+                enemy_list.remove(enemy_list[minusentry])
+            
+
+
             
             
 
-            enemy_list[minusentry].take_damage(plr.damage, plr)
+            #enemy_list[minusentry].take_damage(plr.damage, plr)
             #player_turn, they get to choose which bandit to hurt
         elif dice_roll == 2:
-            print("enemy turn")
+            print("-------------------------------------------------------------")
+            print("\tvvvvENEMY TURN\tENEMY TURN\tENEMY TURNvvvv")
             time.sleep(0.255)
             if plr.is_alive == False:
                 break
             rand_bandit = rng.choice(enemy_list)
             plr.take_damage(rand_bandit.damage, rand_bandit)
-            
+            print("\t^^^^ENEMY TURN\tENEMY TURN\tENEMY TURN^^^^")
+            print("-------------------------------------------------------------")
+            print()
             #input("Press enter to advance\n")
             
             #enemy hurt

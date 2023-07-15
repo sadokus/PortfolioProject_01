@@ -1,3 +1,4 @@
+import time
 class player_class:
 	
 	def __init__(self, name, health, damage, gold):
@@ -20,7 +21,7 @@ class player_class:
 		if self.is_alive == False:
 			return
 		
-		print(self.name + " has taken damage " + str(damage) + " from [" + str(attacker.name) + "]")
+		print("BATTLE INFO: " + self.name + " has taken damage " + str(damage) + " from [" + str(attacker.name) + "]")
 		if self.health - damage > 0:
 			self.health -= damage
 		elif self.health - damage <= 0:
@@ -36,14 +37,18 @@ class enemy_class:
 		self.start_health = health
 		self.health = health
 		self.gold_amount = gold_amount
+		self.is_alive = True
 
 	def take_damage(self, damage, attacker):
 		if self.health - damage > 0:
 			self.health -= damage
-			print(self.name + " has taken damage!")
+			print("BATTLE INFO: " + self.name + " has taken damage!")
 		elif self.health - damage <= 0:
-			
-			print(attacker + " defeated " + self.name + "!\nReward: " + str(self.gold_amount) + " gold!")
+			#self.health = 0
+			print(attacker.name + " defeated " + self.name + "!\nReward: " + str(self.gold_amount) + " gold!")
+			attacker.gold += self.gold_amount
+			time.sleep(1)
+			self.is_alive = False
 		#print(f'Enemy HP: {self.start_health} / {self.health}')
 
 	def __repr__(self):
