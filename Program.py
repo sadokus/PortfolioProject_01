@@ -122,8 +122,10 @@ def begin_battle(plr, enemy_count, enemy_name = "Bandit", enemy_health = 10, ene
             #
             minusentry = None
             while True:
+                fight_input = None
                 try:
                     print(f"-----------------------------------------------------------------\nPlayer HP: {plr.start_health} / {plr.health}\n-----------------------------------------------------------------")
+                    print("Type 'inv' to access your INVENTORY")
                     fight_input = input("\nWhich one do you choose [1] - [n\'th]\n>") 
                     print("-------------------------------------------------------------")
                     minusentry = int(fight_input) - 1
@@ -140,23 +142,28 @@ def begin_battle(plr, enemy_count, enemy_name = "Bandit", enemy_health = 10, ene
                         else:
                             print(f"Player HP: {plr.start_health} / {plr.health}")
                             print("[1] Enemy: " + str(enemy_list[0]))
-                        
+                        print("Type 'inv' to access your INVENTORY")
                         fight_input = input("\nWhich one do you choose [1] - [n\'th]\n> ")
                         print("-------------------------------------------------------------") 
                         minusentry = int(fight_input) - 1
                     
                 except ValueError:
-                    print("[[[Please, input a number within the range given, no string entries!]]]\n")
-                    if len(enemy_list) > 1:
-                        countl = len(enemy_list)
-                        for id in range(countl):
-                            time.sleep(0.0015)
-                            realc = str(id+1)
-                            enemy_text = "[" + realc + "] " + str(enemy_list[id])
-                            print(enemy_text)
-                        else:
-                            print(f"Player HP: {plr.start_health} / {plr.health}")
-                            print("[1] Enemy: " + str(enemy_list[0]))
+                    if fight_input.lower().strip() == "inv":
+                        plr.open_inventory()
+                    else:
+
+                        print("[[[Please, input a number within the range given, no string entries!]]]\n")
+                        print("Type 'inv' to access your INVENTORY")
+                        if len(enemy_list) > 1:
+                            countl = len(enemy_list)
+                            for id in range(countl):
+                                time.sleep(0.0015)
+                                realc = str(id+1)
+                                enemy_text = "[" + realc + "] " + str(enemy_list[id])
+                                print(enemy_text)
+                            else:
+                                print(f"Player HP: {plr.start_health} / {plr.health}")
+                                print("[1] Enemy: " + str(enemy_list[0]))
                     continue
 
                 else:
@@ -203,23 +210,6 @@ def begin_battle(plr, enemy_count, enemy_name = "Bandit", enemy_health = 10, ene
             #enemy hurt
 
 
-def junipers_entry(plr): #passed intro, middle of game
-    print("\n" + plr.name + ", as you slowly ascend the many stairs, a dense murmur from beyond the gate can be heard. You reach the apex and before you is a grand door over twenty-stories high, it's a wonder how anybody could have constructed this gate.")
-    input("Enter to Continue")
-    if unique_events["event1"] == 0:
-        print("\nYou spot a smaller doorway where others are congregated, going through in single-file.\nYou join the others in the line and are allowed access into the Grand City.")
-    else:
-        print("\nYou see a small doorway where many are gathered, slowly gaining access to the city one by one.\nWhile admiring the grandness of Juniper's Gate, Alys quickly tells one of her friends Irmin about you, pointing and laughing before going into the city. Irmin quickly nudges you. He is adorned in guard gear and wields quite the weapon, it has its fair share of scratches and nicks but it's clearly been useful.\nIrmin's face lights up brightly with a toothy grin, 'Any friend of Alys' is a friend of mine, I can expedite your entry if you would follow me!'")
-    print("The grand scale of the city's walls and gate were no joke, the city is dense but there are a few areas where people are condensed in.")
-    place_find = choose_input("Where do you decide to go?", "Armitage Family's Alchemic Shop", "The Barracks", "Armor and Swords")
-    if place_find == 0:
-        print("You head toward the alchemy shop.") ##check if they have event1 == 1 or 0
-    elif place_find == 1:
-        print("You head towards the barracks") ## check if they have event2 == 1 or 0
-    elif place_find == 2:
-        print("You head towards the shop")
-    
-
 def grand_battle_entry(plr): #into the battle, end of game player will fight (3) fight(s)?
     print("\n" + plr.name + ", recovering from a tunnel vision of black, you are surrounded by your comrades in the center of the battlefield, face-to-face with your enemies. You see a young man who last week you considered a friend get quickly cut down in front of you before you ready your weapon, determined to make it out alive.")
 
@@ -228,6 +218,74 @@ def grand_battle_entry(plr): #into the battle, end of game player will fight (3)
     begin_battle(plr, 4)
 
 
+def junipers_entry(plr): #passed intro, middle of game --main part!
+    print("\n" + plr.name + ", as you slowly ascend the many stairs, a dense murmur from beyond the gate can be heard. You reach the apex and before you is a grand door over twenty-stories high, it's a wonder how anybody could have constructed this gate.")
+    input("Enter to Continue!\n")
+    if unique_events["event1"] == 0:
+        print("\nYou spot a smaller doorway where others are congregated, going through in single-file.\nYou join the others in the line and are allowed access into the Grand City.")
+    else:
+        print("\nYou see a small doorway where many are gathered, slowly gaining access to the city one by one.\nWhile admiring the grandness of Juniper's Gate, Alys quickly tells one of her friends Irmin about you, pointing and laughing before going into the city. Irmin quickly nudges you. He is adorned in guard gear and wields quite the weapon, it has its fair share of scratches and nicks but it's clearly been useful.\nIrmin's face lights up brightly with a toothy grin, 'Any friend of Alys' is a friend of mine, I can expedite your entry if you would follow me!'")
+    print("The grand scale of the city's walls and gate were no joke, the city is dense but there are a few areas where people are condensed in.")
+    while plr.is_alive:
+
+        place_find = choose_input("Where do you decide to go?", "Armitage Family's Alchemic Shop", "The Barracks", "Armor and Swords")
+        shopname = "Armitage Family's Alchemic Shop"
+        barracksname = "The Barracks"
+        weaponshop = "Armor and Swords"
+        if place_find == 0:
+            if unique_events["event1"] == 1:
+                print(f"You enter {shopname} and notice a familiar person, Alys!\nShe smiles and waves at you.")
+            elif unique_events["event1"] == 0:
+                print(f"{plr.name}, you enter {shopname} and a friendly person greets you.")
+            while True:
+
+                
+                print(f"Current Gold: {plr.gold}")
+                shop_choice = choose_input("'Hello, what will you have today?'", "Heal wounds: [25 gold]", "Buy HP Potion [10 gold]", "Exit")
+                if shop_choice == 0 and plr.gold >= 25:
+
+                    print(f'HP: [{plr.start_health} / {plr.health}]')
+                    print()
+                    print("The staff apply an alchemic mix of native herbs and a strange ambiently glowing mixture.")
+                    plr.heal(10)
+                    plr.change_gold(25)
+                    print()
+                    print(f'HP: [{plr.start_health} / {plr.health}]')
+                elif shop_choice == 1 and plr.gold >= 10:
+                    healthpotion = "HP Potion"
+                    print("You purchase a health potion!")
+                    plr.change_gold(10)
+                    plr.get_item(healthpotion, 1)
+                elif shop_choice == 2:
+                    input("You leave the shop!\nEnter to Continue")
+                    break
+
+            #print("You head toward the alchemy shop.") ##check if they have event1 == 1 or 0
+        elif place_find == 1:
+            print(f"You head towards {barracksname}") ## check if they have event2 == 1 or 0
+            print("There are many men and women training at wooden practice dummies, testing their stature and strength.\nYou observe the barracks' surroundings a bit more and spot a burly man standing near a Wolven Carrier.")
+            if unique_events["event1"] == 1:
+                print(f'The man looks at you and proudly states, "Ah, you must be {plr.name}, my daughter told me you helped her!"')
+                print(f'This must be Alys\' father, he holds out a uniquely crafted sword.\n"The name\'s Tyr Armitage." he states.')
+
+                print("Weapon Acquired: Juniper's Blessed Sword")  ## not going to implement item weapons :( sorry, me!
+                plr.damage += 6
+            else:
+                print("The man gestures to you and holds out a better weapon than the one you had.")
+                print("Weapon Acquired: Iron Sword")
+                plr.damage += 2
+        
+            print("Everybody started to mount up in their respective carriers, anticipating a big battle. You have no clue what is going on but you feel like they need you.")
+            input("Enter to Continue!\n")
+            print("Four hours later, you realize that the land is very descolate outside of what seems like the small patch of life that was around Juniper's Gate.\nAn unnerving feeling starts to rise within you.")
+            input("Enter to Continue!\n")
+            print("Two hours later, the air starts to feel heavy and your nose fills with the stench of death. A fight draws near. You can hear the clashing of sword, shouting of men and women, and the occasional battlecry.")
+            input("Enter to Continue!\n")
+            grand_battle_entry(plr)
+
+
+        elif place_find == 2:
+            print("You head towards the shop, it is closed!")
 
 ##each story_start requires 3 choices!
 def hartokan_entry(plr): #beginning of game start
@@ -237,7 +295,7 @@ def hartokan_entry(plr): #beginning of game start
         print("You take the Left pathway\nWalking through the forest you take in the green scenery and uniquely shaped rocks that encompass the area.\nOut of no-where, you hear a deathly, bloodcurdling screeching sound coming a couple feet behind you.\nMultiple fast, frantic, heavy footsteps approach you at high-speeds, something is coming to you.\nYou ready yourself.")
         begin_battle(plr, 3, "Hartokan Native Wolf", 6, 1, 4)
         print("\n'Simply amazing, we could use your skills in the battlefield!' a gruff voice calls out.\nYou whip your head up from the last wolf's corpse and spot a unit of a man. Wielding a greatsword resting on his shoulder, a big man looks down upon you.\n'The name's Tyr and I could use somebody like you, follow me. No questions.' the man tells you.")
-        input("Enter to Continue!")
+        input("Enter to Continue!\n")
         print("After what seemed like forever, you and Tyr make it out of the forest and in view of a grand staircase that leads up to a massive gate.\n'That is Juniper's Gate, the only thing holding the abyssal demons and other kingdoms from raiding the 'greatest city' to ever be constructed.' Tyr quickly tells you before walking up the steps.")
         junipers_entry(plr)
 
